@@ -157,6 +157,7 @@ namespace Cursovik
             int i = 0;
             foreach (var item in this)
             {
+                b.Append("      ");
                 b.Append($" {i} Отделение) {item.ToString()} \n");
                 i++;
             }

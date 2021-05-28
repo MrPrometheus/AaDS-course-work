@@ -266,6 +266,8 @@ namespace Cursovik
                     }
                     catch (Exception e)
                     {
+                        _network.Dispose();
+                        _network = null;
                         Console.WriteLine(e.Message);
                         Console.WriteLine("Выход из команды");
                     }
