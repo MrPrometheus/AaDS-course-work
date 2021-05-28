@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Xml.Linq;
 
 namespace Cursovik
 {
     internal class Program
     {
         private static CommercialNetwork _network = null;
+        private static XDocument xdoc;
         public static void Main(string[] args)
         {
             Help();
@@ -237,33 +239,47 @@ namespace Cursovik
                     Console.WriteLine("Сеть магазинов отсутсвует"); 
                     break; 
                 case "RF":
-                    /*if (_network != null)
+                    try
                     {
-                        if (!_network.IsEmpty)
+                        if (_network != null)
                         {
-                            Console.WriteLine("Текущие данные будут удалены! Продолжить? Y/N");
-                            var answer = Console.ReadLine();
-                            if (string.Equals(answer, "Y"))
+                            if (!_network.IsEmpty)
                             {
-                                _network.Dispose(); 
-                                readFile();
+                                Console.WriteLine("Текущие данные будут удалены! Продолжить? Y/N");
+                                var answer = Console.ReadLine();
+                                if (string.Equals(answer, "Y"))
+                                {
+                                    _network.Dispose();
+                                    _network = null;
+                                    ReadXml();
+                                }
                             }
+                            else
+                            {
+                                ReadXml();
+                            } 
                         }
                         else
                         {
-                            readFile();
-                        } 
-                        break;
-                    } 
-                    Console.WriteLine("Сначала создайте торговую сеть");*/
+                            ReadXml();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.WriteLine("Выход из команды");
+                    }
                     break; 
                 case "WRF":
-                    /*if (_network != null)
+                    if (_network != null)
                     {
-                        _network.writeFile(); 
+                        xdoc = new XDocument();
+                        xdoc.Add(_network.WriteXml()); 
+                        xdoc.Save("network.xml");
+                        Console.WriteLine("Структура выгружена в network.xml");
                         break;
                     } 
-                    Console.WriteLine("Сначала создайте Сеть магазинов");*/
+                    Console.WriteLine("Сначала создайте Сеть магазинов");
                     break; 
                 case "SH":
                     if (_network != null)
@@ -295,6 +311,48 @@ namespace Cursovik
             Console.WriteLine("RF заполнить структуры данными из файла"); 
             Console.WriteLine("WRF переписать файл текущими данными"); 
             Console.WriteLine("EXT выход");
+        }
+
+        private static void ReadXml()
+        {
+            XDocument xdoc = XDocument.Load("input.xml");
+            XElement networkElement = xdoc.Element("CommercialNetwork");
+            if(networkElement == null) 
+                throw new Exception("Ошибка формата данных. В файле должен быть корневой элемент CommercialNetwork");
+            
+            XAttribute networkNAme = networkElement.Attribute("name");
+            if(networkNAme == null || String.IsNullOrWhiteSpace(networkNAme.Value)) 
+                throw new Exception("Ошибка формата данных. У сети магазинов должен быть атрибут name и должен быть не пустым!");
+            
+            _network = new CommercialNetwork(networkNAme.Value);
+            foreach (XElement shop in networkElement.Elements("Shop"))
+            {
+                XAttribute shopName = shop.Attribute("name");
+                if (shopName == null || String.IsNullOrWhiteSpace(shopName.Value))
+                    throw new Exception("Ошибка формата данных. У магазина должен быть атрибут name и должен быть не пустым!");
+                _network.PushShop(shopName.Value);
+                
+                foreach (var department in shop.Elements("Department"))
+                {
+                    XAttribute dNumber = department.Attribute("number");
+                    XAttribute dProfile = department.Attribute("profile");
+                    
+                    if(dNumber == null || String.IsNullOrWhiteSpace(dNumber.Value)) 
+                        throw new Exception("Ошибка формата данных. У отделения должен быть атрибут number и должен быть уникальным числом больше 0!");
+                    if(dProfile == null || String.IsNullOrWhiteSpace(dProfile.Value)) 
+                        throw new Exception("Ошибка формата данных. У отделения должен быть атрибут profile и должен быть не пустой строкой!");
+
+                    if (int.TryParse(dNumber.Value, out int index))
+                    {
+                        _network.AddDepartment(shopName.Value, index, dProfile.Value);
+                    }
+                    else
+                    {
+                        throw new Exception("Ошибка формата данных. У отделения атрибут number должен быть уникальным числом больше 0!");
+                    }
+                }
+            }
+            Console.WriteLine("Структура загружена");
         }
     }
 }

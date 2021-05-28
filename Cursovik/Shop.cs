@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Cursovik
 {
@@ -177,6 +178,17 @@ namespace Cursovik
             _head = null;
             _tail = null;
             _count = default;
+        }
+        
+        public XElement WriteXml()
+        {
+            XElement shop = new XElement("Shop");
+            shop.Add(new XAttribute("name", ShopName));
+            foreach (var item in this)
+            {
+                shop.Add(item.WriteXml());
+            }
+            return shop;
         }
         
         IEnumerator IEnumerable.GetEnumerator()

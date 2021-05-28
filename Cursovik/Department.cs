@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Linq;
 
 namespace Cursovik
 {
@@ -22,6 +23,14 @@ namespace Cursovik
         {
             Number = default;
             Profile = default;
+        }
+        
+        public XElement WriteXml()
+        {
+            XElement department = new XElement("Department");
+            department.Add(new XAttribute("number", Number));
+            department.Add(new XAttribute("profile", Profile));
+            return department;
         }
     }
 }

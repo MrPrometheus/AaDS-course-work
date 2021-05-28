@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Cursovik
 {
@@ -119,6 +120,17 @@ namespace Cursovik
 
             Shops = default;
             _count = default;
+        }
+
+        public XElement WriteXml()
+        {
+            XElement network = new XElement("CommercialNetwork");
+            network.Add(new XAttribute("name", CommercialNetworkName));
+            for (int i = 0; i < _count; i++)
+            {
+                network.Add(Shops[i].WriteXml());
+            }
+            return network;
         }
     }
 }
