@@ -50,9 +50,10 @@ namespace Cursovik
                                 Console.WriteLine("Сеть магазинов создана"); 
                                 break; 
                             case "N": 
-                                Console.WriteLine("Выход из кFоманды"); 
+                                Console.WriteLine("Выход из команды"); 
                                 break; 
                             default: 
+                                Console.WriteLine("Сеть магазинов НЕ создана");
                                 Console.WriteLine("Ввод неверен, выход из команды");
                                 break;
                         } 
@@ -64,12 +65,12 @@ namespace Cursovik
                     if (int.TryParse(Console.ReadLine(), out int n))
                     {
                         _network = new CommercialNetwork(nameNetwork, n); 
+                        Console.WriteLine("Сеть магазинов создана"); 
                     }
                     else
                     {
                         Console.WriteLine("Ошибка ввода, выход из команды");
                     }
-                    Console.WriteLine("Сеть магазинов создана"); 
                     break; 
                 case "ADDS":
                     if (_network != null)
@@ -85,7 +86,8 @@ namespace Cursovik
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine(e);
+                            Console.WriteLine(e.Message);
+                            Console.WriteLine("Маазин НЕ добавлен");
                             Console.WriteLine("Выход из команды");
                         }
                         break;
@@ -110,7 +112,7 @@ namespace Cursovik
                             }
                             catch (Exception e)
                             {
-                                Console.WriteLine(e);
+                                Console.WriteLine(e.Message);
                                 Console.WriteLine("Выход из команды");
                             }
                         }
@@ -122,7 +124,7 @@ namespace Cursovik
                     }
                     Console.WriteLine("Сеть магазинов отсутсвует"); 
                     break;
-                case "REMTC":
+                case "REMCN":
                     if (_network != null)
                     {
                         _network.Dispose(); 
@@ -141,7 +143,7 @@ namespace Cursovik
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine(e);
+                            Console.WriteLine(e.Message);
                             Console.WriteLine("Выход из команды");
                         }
                         break;
@@ -158,14 +160,14 @@ namespace Cursovik
                         {
                             try
                             {
-                                var s = Console.ReadLine();
                                 Console.WriteLine("Введите название магазина:");
-                                Console.WriteLine($"Отделение {_network.GetDepartament(s, number)} удалено");
+                                var s = Console.ReadLine();
+                                Console.WriteLine($"{_network.GetDepartament(s, number)} удалено из магазина {s}");
                                 _network.RemoveDepartment(s, number);
                             }
                             catch (Exception e)
                             {
-                                Console.WriteLine(e);
+                                Console.WriteLine(e.Message);
                                 Console.WriteLine("Выход из команды");
                             }
                         }
@@ -199,11 +201,11 @@ namespace Cursovik
                             {
                                 Console.WriteLine("Введите наименование магазина:");
                                 var s = Console.ReadLine();
-                                Console.WriteLine(_network.SearchDepartmentFirst(s, num) ? $"В магазине {s} найдено отделение {_network.GetDepartament(s, num).ToString()}" : "Товар не найден");
+                                Console.WriteLine(_network.SearchDepartmentFirst(s, num) ? $"В магазине {s} найдено отделение {_network.GetDepartament(s, num).ToString()}" : "Отделение не найдено");
                             }
                             catch (Exception e)
                             {
-                                Console.WriteLine(e);
+                                Console.WriteLine(e.Message);
                                 Console.WriteLine("Выход из команды");
                             }
                         }
@@ -226,7 +228,7 @@ namespace Cursovik
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine(e);
+                            Console.WriteLine(e.Message);
                             Console.WriteLine("Выход из команды");
                         }
                         break;
@@ -293,7 +295,5 @@ namespace Cursovik
             Console.WriteLine("WRF переписать файл текущими данными"); 
             Console.WriteLine("EXT выход");
         }
-        
-        
     }
 }

@@ -27,6 +27,8 @@ namespace Cursovik
         {
             if(_count == Shops.Length)
                 throw new InvalidOperationException("Стек заполнен, добавление невозможно!");
+            if(SearchShop(shopName, out int index)) 
+                throw new InvalidOperationException("Магазин с таким именем уже существует. Наименование магазина должно быть уникальным.");
            
             Shops[_count++] = new Shop(shopName);
             return true;
@@ -75,6 +77,7 @@ namespace Cursovik
             b.Append($"Наименование тороговой сети - {CommercialNetworkName}\n");
             for (int i = 0; i < _count; i++)
             {
+                b.Append("   ");
                 b.Append(Shops[i].ToString());
             }
 
@@ -108,9 +111,10 @@ namespace Cursovik
         public void Dispose()
         {
             CommercialNetworkName = default;
-            foreach (var shop in Shops)
+            for (int i = 0; i < _count; i++)
             {
-                shop.Dispose();
+                Shops[i].Dispose();
+                Shops[i] = default;
             }
 
             Shops = default;

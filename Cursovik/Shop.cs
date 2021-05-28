@@ -47,6 +47,7 @@ namespace Cursovik
  
                 while (current != null)
                 {
+                    if (current.Data.Number.Equals(number)) throw new Exception("Отделение с таким номером уже существует, он должен быть уникальным для магазина.");
                     if (current.Data.Number > number) break;
                     current = current.Next;
                 }
@@ -165,9 +166,12 @@ namespace Cursovik
         public void Dispose()
         {
             ShopName = default;
-            foreach (var item in this)
+            
+            Node current = _head;
+            while (current != null)
             {
-                item.Dispose();
+                RemoveDepartment(current.Data.Number);
+                current = current.Next;
             }
 
             _head = null;
