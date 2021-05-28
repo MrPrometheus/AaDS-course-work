@@ -253,6 +253,7 @@ namespace Cursovik
                                     _network = null;
                                     ReadXml();
                                 }
+                                Console.WriteLine("Данные не прочтианы.");
                             }
                             else
                             {
