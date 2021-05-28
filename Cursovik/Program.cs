@@ -19,8 +19,11 @@ namespace Cursovik
                     var answer = Console.ReadLine();
                     if (string.Equals(answer, "Y"))
                     {
-                        _network.Dispose();
-                        _network = null; 
+                        if (_network != null)
+                        {
+                            _network.Dispose();
+                            _network = null; 
+                        }
                         break;
                     }
                     else
