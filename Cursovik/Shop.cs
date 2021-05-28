@@ -18,7 +18,7 @@ namespace Cursovik
     }
     public class Shop : IDisposable, IEnumerable<Department>
     {
-        public string ShopName { get; private set; }
+        public string ShopName { get; set; }
 
         private Node _head;
         private Node _tail;

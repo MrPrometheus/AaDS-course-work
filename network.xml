@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommercialNetwork name="Моя сеть">
+  <Shop name="Пятерочка">
+    <Department number="1" profile="Сортировка" />
+    <Department number="9" profile="Касииры" />
+    <Department number="11" profile="Разгрузка" />
+    <Department number="12" profile="Маркетинг" />
+  </Shop>
+  <Shop name="Магнит">
+    <Department number="1" profile="Сортировка" />
+    <Department number="5" profile="Касииры" />
+    <Department number="16" profile="Уборщики" />
+    <Department number="125" profile="бананы" />
+    <Department number="152" profile="Уборщики" />
+    <Department number="32" profile="кирпичи" />
+  </Shop>
+</CommercialNetwork>

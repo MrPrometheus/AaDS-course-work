@@ -31,12 +31,12 @@ namespace Cursovik
                         command = Console.ReadLine();
                     }
                 }
-                commandRecognizer(command);
+                CommandRecognizer(command);
                 command = Console.ReadLine();
             }
         }
         
-        private static void commandRecognizer(string command) { 
+        private static void CommandRecognizer(string command) { 
             switch (command) { 
                 case "h": 
                     Help();
@@ -102,29 +102,36 @@ namespace Cursovik
                 case "ADDD": 
                     if (_network != null)
                     {
-                        Console.WriteLine("Введите номер отделения:"); 
-                        var dNumber = Console.ReadLine(); 
-                        Console.WriteLine("Введите профиль отделения:"); 
-                        var dProfile = Console.ReadLine();
-                        if (int.TryParse(dNumber, out int number) && number >= 0)
+                        if (!_network.IsEmpty)
                         {
-                            try
+                            Console.WriteLine("Введите номер отделения:"); 
+                            var dNumber = Console.ReadLine(); 
+                            Console.WriteLine("Введите профиль отделения:"); 
+                            var dProfile = Console.ReadLine();
+                            if (int.TryParse(dNumber, out int number) && number >= 0)
                             {
-                                Console.WriteLine("Введите наименование магазина");
-                                var ss = Console.ReadLine();
-                                _network.AddDepartment(ss, number, dProfile);
-                                Console.WriteLine($"Отделение с номером {dNumber} добавлено в магазин {ss}");
+                                try
+                                {
+                                    Console.WriteLine("Введите наименование магазина");
+                                    var ss = Console.ReadLine();
+                                    _network.AddDepartment(ss, number, dProfile);
+                                    Console.WriteLine($"Отделение с номером {dNumber} добавлено в магазин {ss}");
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(e.Message);
+                                    Console.WriteLine("Выход из команды");
+                                }
                             }
-                            catch (Exception e)
+                            else
                             {
-                                Console.WriteLine(e.Message);
-                                Console.WriteLine("Выход из команды");
+                                Console.WriteLine("Номер отделения должен быть больше 0 и быть числом");
+                                Console.WriteLine("Ввод неверен, выход из команды");
                             }
                         }
                         else
                         {
-                            Console.WriteLine("Номер отделения должен быть больше 0 и быть числом");
-                            Console.WriteLine("Ввод неверен, выход из команды");
+                            Console.WriteLine("Отсутствуют магазины");
                         }
                         break; 
                     }
@@ -145,7 +152,10 @@ namespace Cursovik
                     {
                         try
                         {
-                            Console.WriteLine($"Магазин {_network.PopShop().ShopName} удален"); 
+                            var shop = _network.PopShop();
+                            Console.WriteLine($"Магазин {shop.ShopName} удален"); 
+                            shop.Dispose();
+                            shop = default;
                         }
                         catch (Exception e)
                         {
@@ -190,7 +200,17 @@ namespace Cursovik
                     {
                         Console.WriteLine("Введите наименование магазина:");
                         var sName = Console.ReadLine();
-                        Console.WriteLine(_network.SearchShop(sName, out int index) ? $"Магазин {sName} найден" : "Магазин не найден"); 
+                        try
+                        {
+                            Console.WriteLine(_network.getShopInfo(sName));
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                            Console.WriteLine("Выход из команды");
+                            throw;
+                        }
+                        
                         break;
                     } 
                     Console.WriteLine("Сеть магазинов отсутсвует"); 
@@ -201,13 +221,14 @@ namespace Cursovik
                         Console.WriteLine("Введите номер отделения:"); 
                         var dNumber = Console.ReadLine();
                         
+                        Console.WriteLine("Введите профиль отделения:"); 
+                        var dProfile = Console.ReadLine();
+                        
                         if (int.TryParse(dNumber, out int num))
                         {
                             try
                             {
-                                Console.WriteLine("Введите наименование магазина:");
-                                var s = Console.ReadLine();
-                                Console.WriteLine(_network.SearchDepartmentFirst(s, num) ? $"В магазине {s} найдено отделение {_network.GetDepartament(s, num).ToString()}" : "Отделение не найдено");
+                                Console.WriteLine(_network.SearchDepartmentFirst(num, dProfile, out string shop) ? $"В магазине {shop} найдено отделение {_network.GetDepartament(shop, num).ToString()}" : "Отделение не найдено");
                             }
                             catch (Exception e)
                             {
@@ -256,7 +277,10 @@ namespace Cursovik
                                     _network = null;
                                     ReadXml();
                                 }
-                                Console.WriteLine("Данные не прочтианы.");
+                                else
+                                {
+                                    Console.WriteLine("Данные не прочтианы.");
+                                }
                             }
                             else
                             {
@@ -321,7 +345,17 @@ namespace Cursovik
 
         private static void ReadXml()
         {
-            XDocument xdoc = XDocument.Load("input.xml");
+            XDocument xdoc;
+            try
+            {
+                xdoc = XDocument.Load("network.xml");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return;
+            }
+            
             XElement networkElement = xdoc.Element("CommercialNetwork");
             if(networkElement == null) 
                 throw new Exception("Ошибка формата данных. В файле должен быть корневой элемент CommercialNetwork");

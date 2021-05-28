@@ -6,8 +6,8 @@ namespace Cursovik
 {
     public class CommercialNetwork : IDisposable
     {
-        public string CommercialNetworkName { get; private set; }
-        public Shop[] Shops { get; private set; }
+        public string CommercialNetworkName { get;  set; }
+        public Shop[] Shops { get;  set; }
 
         private int _count;
         private const int _maxLength = 10;
@@ -97,16 +97,32 @@ namespace Cursovik
             return Shops[index].GetDepartament(number);
         }
 
-        public bool SearchDepartmentFirst(string shop, int number)
+        public bool SearchDepartmentFirst(int number, string profile, out string shop)
         {
-            if(!SearchShop(shop, out int index)) throw new InvalidOperationException("Невозможно найти отделение. Магазина не существует.");
-            return Shops[index].ContainsFirst(number);
+            foreach (var item in Shops)
+            {
+                if (item.ContainsFirst(number) && item.GetDepartament(number).Profile == profile)
+                {
+                    shop = item.ShopName;
+                    return true;
+                }
+            }
+            shop = "";
+            return false;
         }
         
-        public bool SearchDepartmentEnd(string shop, int number)
+        public bool SearchDepartmentEnd(int number, string profile, out string shop)
         {
-            if(!SearchShop(shop, out int index)) throw new InvalidOperationException("Невозможно найти отделение. Магазина не существует.");
-            return Shops[index].ContainsEnd(number);
+            foreach (var item in Shops)
+            {
+                if (item.ContainsEnd(number) && item.GetDepartament(number).Profile == profile)
+                {
+                    shop = item.ShopName;
+                    return true;
+                }
+            }
+            shop = "";
+            return false;
         }
         
         public void Dispose()

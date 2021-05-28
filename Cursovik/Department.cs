@@ -5,8 +5,8 @@ namespace Cursovik
 {
     public class Department : IDisposable
     {
-        public int Number { get; private set; }
-        public string Profile { get; private set; }
+        public int Number { get; set; }
+        public string Profile { get; set; }
 
         public Department(int number, string profile)
         {
