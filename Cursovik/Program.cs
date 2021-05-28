@@ -101,7 +101,7 @@ namespace Cursovik
                         var dNumber = Console.ReadLine(); 
                         Console.WriteLine("Введите профиль отделения:"); 
                         var dProfile = Console.ReadLine();
-                        if (int.TryParse(dNumber, out int number))
+                        if (int.TryParse(dNumber, out int number) && number >= 0)
                         {
                             try
                             {
@@ -118,6 +118,7 @@ namespace Cursovik
                         }
                         else
                         {
+                            Console.WriteLine("Номер отделения должен быть больше 0 и быть числом");
                             Console.WriteLine("Ввод неверен, выход из команды");
                         }
                         break; 
