@@ -1,14 +1,14 @@
-# Курсовая работа
+# Course work
 ***
-## Предмет
-- Структурам и алгоритмам обработки данных
-## Задание
-- Структура: Статическаий стек упорядоченных динамических списков
-- Данные: Торговая сеть(стек) - композиция магазинов, Магазин(список) - композиция отделов
-- Загрузка и сохранение данных: Xml формат
+## Subject
+- Data structures and algorithms
+## The task
+- Data structure: Static stack of ordered dynamic lists
+- Data: Retail chain (stack) - composition of stores, Store (list) - composition of departments
+- Loading and saving data: Xml format
 ***
-## Вид данных
-### Торговая сеть
+## Data type
+### Commercial network
 
     class CommecrialNetwork 
     {
@@ -16,7 +16,7 @@
         Shop[] Shops;
     }
     
-### Магазин
+### Shop
 
     class Shop 
     {
@@ -24,7 +24,7 @@
         Department Head; 
     }
     
-### Отдел
+### Department
 
     class Department
     {
@@ -33,5 +33,5 @@
     }
 
 ***
-Программа реализует стандартный набор методов структуры стека и списка.
-Реализовано сохранение структуры в xml виде и загрузка структры из xml файла.
+The program implements a standard set of methods for the stack structure and list structure.
+Implemented saving the structure in xml form and loading the structure from an xml file.
